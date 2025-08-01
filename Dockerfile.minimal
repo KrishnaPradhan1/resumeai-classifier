@@ -7,22 +7,18 @@ WORKDIR /app
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     libpq-dev \
-    gcc \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better caching
 COPY backend/requirements.txt .
 
-# Install Python dependencies in stages
+# Install only essential dependencies
 RUN pip install --no-cache-dir --upgrade pip
 RUN pip install --no-cache-dir fastapi uvicorn python-multipart
 RUN pip install --no-cache-dir sqlalchemy psycopg2-binary
 RUN pip install --no-cache-dir python-jose[cryptography] passlib[bcrypt] python-dotenv
-RUN pip install --no-cache-dir transformers torch==2.1.1+cpu scikit-learn numpy pandas
-RUN pip install --no-cache-dir PyPDF2 python-docx spacy textblob
-RUN pip install --no-cache-dir celery httpx Pillow
 RUN pip install --no-cache-dir pydantic pydantic-settings python-dateutil pytz
-RUN pip install --no-cache-dir pytest black structlog fastapi-cors python-decouple
+RUN pip install --no-cache-dir structlog fastapi-cors python-decouple
 
 # Copy backend application code
 COPY backend/ .
