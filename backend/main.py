@@ -3,36 +3,9 @@ ResumeAI Classifier - Backend Application
 Advanced AI-based resume classification system
 """
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-import structlog
-import os
-from contextlib import asynccontextmanager
-
-from app.core.config import settings
-from app.core.database import init_db
-from app.core.logging import setup_logging
-from app.api.v1.api import api_router
-
-# Setup logging
-logger = setup_logging()
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    """Application lifespan events"""
-    # Startup
-    logger.info("Starting ResumeAI Classifier backend...")
-    try:
-        await init_db()
-        logger.info("Database initialized successfully")
-    except Exception as e:
-        logger.error(f"Database initialization failed: {e}")
-    
-    yield
-    
-    # Shutdown
-    logger.info("Shutting down ResumeAI Classifier backend...")
 
 # Create FastAPI app
 app = FastAPI(
@@ -40,21 +13,17 @@ app = FastAPI(
     description="Advanced AI-based resume classification system for recruiters and job portals",
     version="1.0.0",
     docs_url="/docs",
-    redoc_url="/redoc",
-    lifespan=lifespan
+    redoc_url="/redoc"
 )
 
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.ALLOWED_ORIGINS,
+    allow_origins=["*"],  # Allow all origins for now
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# Include API router
-app.include_router(api_router, prefix="/api/v1")
 
 # Health check endpoint
 @app.get("/health")
@@ -73,6 +42,12 @@ async def root():
         "health": "/health"
     }
 
+# Test endpoint
+@app.get("/test")
+async def test():
+    """Test endpoint"""
+    return {"message": "API is working!"}
+
 # Error handlers
 @app.exception_handler(404)
 async def not_found_handler(request, exc):
@@ -83,7 +58,6 @@ async def not_found_handler(request, exc):
 
 @app.exception_handler(500)
 async def internal_error_handler(request, exc):
-    logger.error(f"Internal server error: {exc}")
     return JSONResponse(
         status_code=500,
         content={"detail": "Internal server error"}
