@@ -1,7 +1,7 @@
 // API Configuration
 export const API_CONFIG = {
   // Railway backend URL - update this with your actual Railway URL
-  BASE_URL: process.env.REACT_APP_API_URL || 'https://your-railway-app-name.railway.app',
+  BASE_URL: process.env.REACT_APP_API_URL || 'https://resumeai-backend.railway.app',
   
   // API endpoints
   ENDPOINTS: {
