@@ -1,0 +1,5 @@
+[33m7e81a9b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m Add missing React app files - index.html, manifest.json, index.tsx, robots.txt
+[33m0cd98fa[m Fix TypeScript version conflict - downgrade to 4.9.5 for react-scripts compatibility
+[33m0153624[m Simplify frontend dependencies to minimal set for Vercel deployment
+[33m248989d[m Fix frontend dependencies - remove react-sortable-hoc conflict
+[33mda6ae2c[m Fix Vercel configuration - use rewrites instead of routes
